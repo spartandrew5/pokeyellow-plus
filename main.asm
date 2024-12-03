@@ -429,3 +429,5 @@ INCLUDE "engine/debug/debug_menu.asm"
 SECTION "Engine Spillover", ROMX
 
 INCLUDE "engine/overworld/use_another_repel.asm"
+INCLUDE "engine/menus/item_descriptions.asm"
+
