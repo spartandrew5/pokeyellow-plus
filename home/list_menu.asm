@@ -50,7 +50,16 @@ DisplayListMenuID::
 	ld [wTopMenuItemY], a
 	ld a, 5
 	ld [wTopMenuItemX], a
+	ld a, [wTempFlag]
+	cp 1
+	ld a, 0
+	ld [wTempFlag], a
+	jr nz, .noSort
+	ld a, PAD_A | PAD_B | PAD_SELECT | PAD_START
+	jr .continue
+.noSort
 	ld a, PAD_A | PAD_B | PAD_SELECT
+.continue
 	ld [wMenuWatchedKeys], a
 	ld c, 10
 	call DelayFrames
@@ -174,6 +183,8 @@ DisplayListMenuIDLoop::
 	jp nz, ExitListMenu ; if so, exit the menu
 	bit B_PAD_SELECT, a
 	jp nz, HandleItemListSwapping ; if so, allow the player to swap menu entries
+	bit 3, a
+	jp nz, .sortItems
 	ld b, a
 	bit B_PAD_DOWN, b
 	ld hl, wListScrollOffset
@@ -193,6 +204,10 @@ DisplayListMenuIDLoop::
 	jp z, DisplayListMenuIDLoop
 	dec [hl]
 	jp DisplayListMenuIDLoop
+.sortItems
+	rra
+	rla
+	jp BankswitchBack
 
 DisplayChooseQuantityMenu::
 ; text box dimensions/coordinates for just quantity
