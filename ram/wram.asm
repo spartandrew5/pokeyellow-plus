@@ -75,7 +75,13 @@ wTempoModifier:: db
 
 wc0f3:: dw
 
-	ds 11
+wPlayerGender::
+; $00 = boy
+; $01 = girl
+; $02 = enby
+	ds 1
+
+	ds 10
 
 
 SECTION "Sprite State Data", WRAM0

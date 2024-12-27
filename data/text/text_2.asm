@@ -1320,3 +1320,8 @@ _HookedMonAttackedText::
 	text_start
 	cont "attacked!"
 	prompt
+
+_BoyGirlText::
+    text "Play as Red, Green"
+    line "or Yellow?"
+    done

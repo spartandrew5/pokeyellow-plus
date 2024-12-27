@@ -1793,23 +1793,23 @@ LoadWalkingPlayerSpriteGraphics::
 	ld [wd472], a
 	ld b, BANK(RedSprite)
 	ld de, RedSprite
-;	ld a, [wPlayerGender]
-;	and a
-;	jr z, .AreGuy1
-;	ld de, GreenSprite
+	ld a, [wPlayerGender]
+	and a
+	jr z, .AreGuy1
+	ld de, GreenSprite
 .AreGuy1
 	jr LoadPlayerSpriteGraphicsCommon
 
 LoadRunningPlayerSpriteGraphics::
 ; new sprite copy stuff
 	xor a
-;	ld [wd473], a
+	ld [wd472], a
 	ld b, BANK(RedRunSprite)
 	ld de, RedRunSprite
-;	ld a, [wPlayerGender]
-;	and a
-;	jr z, .AreGuy1
-;	ld de, GreenRunSprite
+	ld a, [wPlayerGender]
+	and a
+	jr z, .AreGuy1
+	ld de, GreenRunSprite
 .AreGuy1
 	jr LoadPlayerSpriteGraphicsCommon
 
@@ -1838,6 +1838,10 @@ LoadSurfingPlayerSpriteGraphics::
 LoadBikePlayerSpriteGraphics::
 	ld b, BANK(RedBikeSprite)
 	ld de, RedBikeSprite
+	ld a, [wPlayerGender]
+	and a
+	jr z, LoadPlayerSpriteGraphicsCommon
+	ld de, GreenBikeSprite
 
 LoadPlayerSpriteGraphicsCommon::
 	ld hl, vNPCSprites
