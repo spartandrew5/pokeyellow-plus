@@ -265,7 +265,7 @@ OverworldLoopLessDelay::
 	cp 0
 	jr z, .skipDecrement
 	dec a
-	.skipDecrement:
+.skipDecrement:
 	ld [wNoSprintSteps], a
 	call AdvancePlayerSprite
 	ld a, [wWalkCounter]

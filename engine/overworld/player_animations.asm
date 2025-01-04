@@ -511,8 +511,9 @@ _HandleMidJump::
 .finishedJump
 	ld a, 3
 	ld [wNumberOfNoRandomBattleStepsLeft], a
+	ld a, [wStatusFlags2]
+	set BIT_WILD_ENCOUNTER_COOLDOWN, a
 	ld [wStatusFlags2], a
-	set BIT_SCRIPTED_NPC_MOVEMENT, [hl]
 	ld a, 8
 	ld [wNoSprintSteps], a
 	ld a, [wWalkCounter]
