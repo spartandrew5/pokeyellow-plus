@@ -239,12 +239,12 @@ OverworldLoopLessDelay::
 .moveAhead2
 	ld hl, wMiscFlags
 	res BIT_TURNING, [hl]
-	ld a,[wWalkBikeSurfState]
+	ld a, [wWalkBikeSurfState]
 	dec a
-	jr nz,.normalPlayerSpriteAdvancement
+	jr nz, .normalPlayerSpriteAdvancement
 	ld a, [wMovementFlags]
 	bit BIT_LEDGE_OR_FISHING, a
-	jr nz,.normalPlayerSpriteAdvancement
+	jr nz, .normalPlayerSpriteAdvancement
 	call DoBikeSpeedup
 	call DoBikeSpeedup
 	call DoBikeSpeedup
@@ -253,41 +253,41 @@ OverworldLoopLessDelay::
 	ld a, [wNoSprintSteps]
 	cp 0
 	jr nz, .notRunning
-	ld a,[wWalkBikeSurfState]
+	ld a, [wWalkBikeSurfState]
 	cp a, $02
-	jr z, .surfFaster
+	jr z, .speedUp
 	; Add running shoes
 	ld a, [hJoyHeld] ; Check what buttons are being pressed
 	and PAD_B ; Are you holding B?
 	jr nz, .checkIfWalking
-	; marcelnote - running sprites
+	; running sprites
 	; if reached here then player is not running, so check if we need to update sprites
 	ld a, [wWalkBikeSurfState]
 	and a ; WALKING?
-	jr nz, .normalPlayerSpriteAdvancement ; if not walking, no need to update sprites
+	jr nz, .skipDecrement ; if not walking, no need to update sprites
 	ld hl, wStatusFlags6
 	bit BIT_RUNNING, [hl]
 	jr z, .notRunning ; if wasn't running, no need to update sprites
 	res BIT_RUNNING, [hl]
 	call LoadWalkingPlayerSpriteGraphics
-	jr .normalPlayerSpriteAdvancement
+	jr .skipDecrement
 .checkIfWalking
 	ld a, [wWalkBikeSurfState]
 	and a ; WALKING?
-	jr nz, .surfFaster ; if not walking, no need to update sprites
+	jr nz, .speedUp ; if not walking, no need to update sprites
 	ld hl, wStatusFlags6
 	bit BIT_RUNNING, [hl]
-	jr nz, .surfFaster ; if already running, no need to update sprites
+	jr nz, .speedUp ; if already running, no need to update sprites
 	set BIT_RUNNING, [hl]
 	call LoadRunningPlayerSpriteGraphics
-.surfFaster
+.speedUp
 	call DoBikeSpeedup ; Make you go faster if you were holding B
 .notRunning
 	ld a,[wNoSprintSteps]
 	cp 0
 	jr z, .skipDecrement
 	dec a
-.skipDecrement:
+.skipDecrement
 	ld [wNoSprintSteps], a
 	call AdvancePlayerSprite
 	ld a, [wWalkCounter]
