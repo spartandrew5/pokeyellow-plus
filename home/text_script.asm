@@ -204,9 +204,6 @@ DisplayPlayerBlackedOutText::
 .didnotblackoutinsafari
 	jp HoldTextDisplayOpen
 
-PlayerBlackedOutText::
-	text_far _PlayerBlackedOutText
-	text_end
 
 DisplayRepelWoreOffText::
 	ld hl, RepelWoreOffText
