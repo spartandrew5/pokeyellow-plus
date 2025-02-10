@@ -59,7 +59,10 @@ SECTION "rst38", ROM0[$0038]
 SECTION "vblank", ROM0[$0040]
 	jp VBlank
 
-	ds $48 - @, 0 ; unused
+; PureRGBnote: MOVED: 5 extra bytes of space left here, may as well move something here that puts the space to some use	
+ContCharText::
+	text_far _ContCharText
+	text_end
 
 SECTION "lcd", ROM0[$0048]
 	jp LCDC
@@ -68,8 +71,8 @@ SECTION "lcd", ROM0[$0048]
 
 SECTION "timer", ROM0[$0050]
 	jp Timer
-
-	ds $58 - @, 0 ; unused
+; PureRGBnote: MOVED: 5 extra bytes of space left here, may as well move something here that puts the space to some use	
+PlacePOKeText::   db "POKé@"
 
 SECTION "serial", ROM0[$0058]
 	jp Serial

@@ -176,7 +176,6 @@ TMCharText::      db "TM@"
 TrainerCharText:: db "TRAINER@"
 PCCharText::      db "PC@"
 RocketCharText::  db "ROCKET@"
-PlacePOKeText::   db "POKé@"
 SixDotsCharText:: db "……@"
 EnemyText::       db "Enemy @"
 PlacePKMNText::   db "<PK><MN>@"
@@ -192,10 +191,6 @@ ContText::
 	pop de
 	inc de
 	jp PlaceNextChar
-
-ContCharText::
-	text_far _ContCharText
-	text_end
 
 PlaceDexEnd::
 	ld [hl], '.'
