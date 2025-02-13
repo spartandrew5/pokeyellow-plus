@@ -1,5 +1,33 @@
 ChoosePlayerName:
 	call OakSpeechSlidePicRight
+	ld a, [wPlayerGender]
+	cp 2
+	jr z, .YellowNames
+	and a
+	jr z, .RedNames
+	; Green names
+	ld de, DefaultNamesGreen
+	call DisplayIntroNameTextBox
+	ld a, [wCurrentMenuItem]
+	and a
+	jr z, .customName
+	ld hl, DefaultNamesGreenList
+	call GetDefaultName
+	ld de, wPlayerName
+	call OakSpeechSlidePicLeft
+	jr .done
+.YellowNames
+	ld de, DefaultNamesYellow
+	call DisplayIntroNameTextBox
+	ld a, [wCurrentMenuItem]
+	and a
+	jr z, .customName
+	ld hl, DefaultNamesYellowList
+	call GetDefaultName
+	ld de, wPlayerName
+	call OakSpeechSlidePicLeft
+	jr .done
+.RedNames
 	ld de, DefaultNamesPlayer
 	call DisplayIntroNameTextBox
 	ld a, [wCurrentMenuItem]
@@ -22,6 +50,18 @@ ChoosePlayerName:
 	call Delay3
 	ld de, RedPicFront
 	ld b, BANK(RedPicFront)
+	ld a, [wPlayerGender]
+	cp 2
+	jr z, .IsYellow
+	and a
+	jr z, .ShowPic
+	ld de, GreenPicFront
+	ld b, BANK(GreenPicFront)
+	jr .ShowPic
+.IsYellow
+	ld de, YellowPicFront
+	ld b, BANK(YellowPicFront)
+.ShowPic
 	call IntroDisplayPicCenteredOrUpperRight
 .done
 	ld hl, YourNameIsText

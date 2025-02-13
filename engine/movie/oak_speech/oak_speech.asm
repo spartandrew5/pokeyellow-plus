@@ -103,11 +103,17 @@ OakSpeech:
 	ld de, RedPicFront
 	lb bc, BANK(RedPicFront), $00
 	ld a, [wPlayerGender]
+	cp 2
+	jr z, .IsYellow1
 	and a
 	jr z, .NotGreen1
 	;farcall SendPlayerPal
 	ld de, GreenPicFront
 	lb bc, BANK(GreenPicFront), $00
+	jr .NotGreen1
+.IsYellow1
+	ld de, YellowPicFront
+	lb bc, BANK(YellowPicFront), $00
 .NotGreen1:
 	call IntroDisplayPicCenteredOrUpperRight
 	call MovePicLeft
@@ -129,11 +135,17 @@ OakSpeech:
 	ld de, RedPicFront
 	lb bc, BANK(RedPicFront), $00
 	ld a, [wPlayerGender]
+	cp 2
+	jr z, .IsYellow2
 	and a
 	jr z, .NotGreen2
 	;farcall SendPlayerPal
 	ld de, GreenPicFront
 	lb bc, Bank(GreenPicFront), $00
+	jr .NotGreen2
+.IsYellow2
+	ld de, YellowPicFront
+	lb bc, BANK(YellowPicFront), $00
 .NotGreen2:
 	call IntroDisplayPicCenteredOrUpperRight
 	call GBFadeInFromWhite
@@ -159,10 +171,16 @@ OakSpeech:
 	ld b, BANK(RedSprite)
 	ld c, $0C
 	ld a, [wPlayerGender]
+	cp 2
+	jr z, .IsYellow3
 	and a
 	jr z, .NotGreen3
 	ld de, GreenSprite
 	lb bc, BANK(GreenSprite), $0C
+	jr .NotGreen3
+.IsYellow3
+	ld de, YellowSprite
+	lb bc, BANK(YellowSprite), $0C
 .NotGreen3:
 	ld hl, vSprites
 	call CopyVideoData
@@ -292,21 +310,37 @@ IntroDisplayPicCenteredOrUpperRight:
 	ldh [hStartTileID], a
 	predef_jump CopyUncompressedPicToTilemap
 
-; displays boy/girl choice
+; displays boy/girl/yellow choice
 BoyGirlChoice::
 	call SaveScreenTilesToBuffer1
-	call InitBoyGirlTextBoxParameters
-	jr DisplayBoyGirlChoice
+	jr DisplayBoyGirlYellowChoice
 
-InitBoyGirlTextBoxParameters::
-   ld a, $1 ; loads the value for the unused North/West choice, that was changed to say Boy/Girl
-	ld [wTwoOptionMenuID], a
-	coord hl, 6, 5 
-	ld bc, $607
-	ret
-	
-DisplayBoyGirlChoice::
-	  ld a, $14
-	  ld [wTextBoxID], a
-	  call DisplayTextBoxID
-	  jp LoadScreenTilesFromBuffer1
+DisplayBoyGirlYellowChoice::
+	ld a, BOY_GIRL_YELLOW
+	ld [wTextBoxID], a
+	call DisplayTextBoxID
+	ld hl, wTopMenuItemY
+	ld a, 7
+	ld [hli], a ; top menu item Y
+	ld a, 12
+	ld [hli], a ; top menu item X
+	xor a
+	ld [hli], a ; current menu item ID
+	inc hl
+	ld a, $2
+	ld [hli], a ; wMaxMenuItem (2 = 3 options: 0, 1, 2)
+	ld a, PAD_B | PAD_A
+	ld [hli], a ; wMenuWatchedKeys
+	xor a
+	ld [hl], a ; wLastMenuItem
+	call HandleMenuInput
+	bit B_PAD_B, a
+	jr nz, .defaultOption ; if B was pressed, assign Yellow
+; A was pressed
+	call PlaceUnfilledArrowMenuCursor
+	ld a, [wCurrentMenuItem]
+	jp LoadScreenTilesFromBuffer1
+.defaultOption
+	ld a, $02
+	ld [wCurrentMenuItem], a
+	jp LoadScreenTilesFromBuffer1

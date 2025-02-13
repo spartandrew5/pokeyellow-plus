@@ -503,10 +503,16 @@ DrawTrainerInfo:
 	ld de, RedPicFront
 	lb bc, BANK(RedPicFront), $01
 	ld a, [wPlayerGender]
+	cp 2 ; check if Yellow
+	jr z, .AreYellow
 	and a
 	jr z, .AreBoy
 	ld de, GreenPicFront
 	lb bc, BANK(GreenPicFront), $01
+	jr .AreBoy
+.AreYellow
+	ld de, YellowPicFront
+	lb bc, BANK(YellowPicFront), $01
 .AreBoy
 	predef DisplayPicCenteredOrUpperRight
 	call DisableLCD

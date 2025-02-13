@@ -198,11 +198,17 @@ HoFMonInfoText:
 
 HoFLoadPlayerPics:
 	ld a, [wPlayerGender] ; New gender check
-	and a      ; New gender check
+	cp 2 ; check if Yellow
+	jr z, .YellowStuff1
+	and a
 	jr nz, .GirlStuff1
 	ld de, RedPicFront
 	ld a, BANK(RedPicFront)
-	jr .Routine ; skip the girl stuff and go to main routine
+	jr .Routine
+.YellowStuff1
+	ld de, YellowPicFront
+	ld a, BANK(YellowPicFront)
+	jr .Routine
 .GirlStuff1
 	ld de, GreenPicFront
 	ld a, BANK(GreenPicFront)
@@ -218,11 +224,17 @@ HoFLoadPlayerPics:
 	ld de, vFrontPic
 	call InterlaceMergeSpriteBuffers
 	ld a, [wPlayerGender] ; new gender check
-	and a      ; new gender check
+	cp 2 ; check if Yellow
+	jr z, .YellowStuff2
+	and a
 	jr nz, .GirlStuff2
 	ld de, RedPicBack
 	ld a, BANK(RedPicBack)
-	jr .routine2 ; skip the girl stuff and continue original routine if guy
+	jr .routine2
+.YellowStuff2
+	ld de, YellowPicBack
+	ld a, BANK(YellowPicBack)
+	jr .routine2
 .GirlStuff2
 	ld de, GreenPicBack
 	ld a, BANK(GreenPicBack)
