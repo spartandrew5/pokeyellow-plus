@@ -34,6 +34,7 @@ SECTION "NPC Sprites 2", ROMX
 
 RedBikeSprite::          INCBIN "gfx/sprites/red_bike.2bpp"
 RedSprite::              INCBIN "gfx/sprites/red.2bpp"
+RedRunSprite::           INCBIN "gfx/sprites/red_run.2bpp"
 BlueSprite::             INCBIN "gfx/sprites/blue.2bpp"
 OakSprite::              INCBIN "gfx/sprites/oak.2bpp"
 YoungsterSprite::        INCBIN "gfx/sprites/youngster.2bpp"
@@ -49,7 +50,7 @@ GirlSprite::             INCBIN "gfx/sprites/girl.2bpp"
 HikerSprite::            INCBIN "gfx/sprites/hiker.2bpp"
 BeautySprite::           INCBIN "gfx/sprites/beauty.2bpp"
 GentlemanSprite::        INCBIN "gfx/sprites/gentleman.2bpp"
-DaisySprite::            INCBIN "gfx/sprites/daisy.2bpp"
+;DaisySprite::            INCBIN "gfx/sprites/daisy.2bpp"
 BikerSprite::            INCBIN "gfx/sprites/biker.2bpp"
 SailorSprite::           INCBIN "gfx/sprites/sailor.2bpp"
 CookSprite::             INCBIN "gfx/sprites/cook.2bpp"
@@ -87,3 +88,8 @@ ChanseySprite::          INCBIN "gfx/sprites/chansey.2bpp"
 SurfingPikachuSprite::   INCBIN "gfx/sprites/surfing_pikachu.2bpp"
 JessieSprite::           INCBIN "gfx/sprites/jessie.2bpp"
 JamesSprite::            INCBIN "gfx/sprites/james.2bpp"
+
+
+SECTION "NPC Sprites 4", ROMX
+
+DaisySprite::            INCBIN "gfx/sprites/daisy.2bpp"

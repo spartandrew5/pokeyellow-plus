@@ -123,6 +123,7 @@ OverworldLoopLessDelay::
 	jp OverworldLoop
 
 .noDirectionButtonsPressed
+	call SwitchRunningToWalkingSprites
 	call UpdateSprites
 	ld hl, wMiscFlags
 	res BIT_TURNING, [hl]
@@ -255,11 +256,32 @@ OverworldLoopLessDelay::
 	ld a,[wWalkBikeSurfState]
 	cp a, $02
 	jr z, .surfFaster
-	ld a, [hJoyHeld]
-	and PAD_B
-	jr z, .notRunning
+	; Add running shoes
+	ld a, [hJoyHeld] ; Check what buttons are being pressed
+	and PAD_B ; Are you holding B?
+	jr nz, .checkIfWalking
+	; marcelnote - running sprites
+	; if reached here then player is not running, so check if we need to update sprites
+	ld a, [wWalkBikeSurfState]
+	and a ; WALKING?
+	jr nz, .normalPlayerSpriteAdvancement ; if not walking, no need to update sprites
+	ld hl, wStatusFlags6
+	bit BIT_RUNNING, [hl]
+	jr z, .notRunning ; if wasn't running, no need to update sprites
+	res BIT_RUNNING, [hl]
+	call LoadWalkingPlayerSpriteGraphics
+	jr .normalPlayerSpriteAdvancement
+.checkIfWalking
+	ld a, [wWalkBikeSurfState]
+	and a ; WALKING?
+	jr nz, .surfFaster ; if not walking, no need to update sprites
+	ld hl, wStatusFlags6
+	bit BIT_RUNNING, [hl]
+	jr nz, .surfFaster ; if already running, no need to update sprites
+	set BIT_RUNNING, [hl]
+	call LoadRunningPlayerSpriteGraphics
 .surfFaster
-	call DoBikeSpeedup
+	call DoBikeSpeedup ; Make you go faster if you were holding B
 .notRunning
 	ld a,[wNoSprintSteps]
 	cp 0
@@ -846,6 +868,16 @@ LoadPlayerSpriteGraphics::
 	jp z, LoadBikePlayerSpriteGraphics
 	dec a
 	jp z, LoadSurfingPlayerSpriteGraphics2
+	jp LoadWalkingPlayerSpriteGraphics
+
+SwitchRunningToWalkingSprites: ; marcelnote - running sprites
+	ld a, [wWalkBikeSurfState]
+	and a ; WALKING?
+	ret nz ; if not walking, do nothing
+	ld hl, wStatusFlags6
+	bit BIT_RUNNING, [hl]
+	ret z ; if wasn't running, do nothing
+	res BIT_RUNNING, [hl]
 	jp LoadWalkingPlayerSpriteGraphics
 
 IsBikeRidingAllowed::
@@ -1761,6 +1793,24 @@ LoadWalkingPlayerSpriteGraphics::
 	ld [wd472], a
 	ld b, BANK(RedSprite)
 	ld de, RedSprite
+;	ld a, [wPlayerGender]
+;	and a
+;	jr z, .AreGuy1
+;	ld de, GreenSprite
+.AreGuy1
+	jr LoadPlayerSpriteGraphicsCommon
+
+LoadRunningPlayerSpriteGraphics::
+; new sprite copy stuff
+	xor a
+;	ld [wd473], a
+	ld b, BANK(RedRunSprite)
+	ld de, RedRunSprite
+;	ld a, [wPlayerGender]
+;	and a
+;	jr z, .AreGuy1
+;	ld de, GreenRunSprite
+.AreGuy1
 	jr LoadPlayerSpriteGraphicsCommon
 
 LoadSurfingPlayerSpriteGraphics2::
