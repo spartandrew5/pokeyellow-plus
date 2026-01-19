@@ -455,6 +455,11 @@ SECTION "Audio Engine 4", ROMX
 
 INCLUDE "audio/engine_4.asm"
 
+SECTION "Fade Audio", ROMX
+
+INCLUDE "audio/fade_audio.asm"
+
+
 
 SECTION "Music 1", ROMX
 
