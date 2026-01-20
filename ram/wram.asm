@@ -75,13 +75,7 @@ wTempoModifier:: db
 
 wc0f3:: dw
 
-wPlayerGender::
-; $00 = boy
-; $01 = girl
-; $02 = enby
-	ds 1
-
-	ds 10
+	ds 11
 
 
 SECTION "Sprite State Data", WRAM0
@@ -2000,7 +1994,13 @@ wSpriteSetID:: db
 
 wObjectDataPointerTemp:: dw
 
-	ds 2
+wPlayerGender::
+; $00 = boy
+; $01 = girl
+; $02 = enby
+	ds 1
+
+	ds 1
 
 ; the tile shown outside the boundaries of the map
 wMapBackgroundTile:: db
