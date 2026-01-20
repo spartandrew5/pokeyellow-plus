@@ -6384,26 +6384,35 @@ LoadPlayerBackPic:
 	ld a, [wBattleType]
 	ld de, OldManPicBack
 	cp BATTLE_TYPE_OLD_MAN ; is it the old man tutorial?
-	jr z, .next
+	jr z, .scaleSprite
 	ld de, ProfOakPicBack
 	cp BATTLE_TYPE_PIKACHU ; is it the pikachu battle at the beginning of the game?
-	jr z, .next
+	jr z, .scaleSprite
 	ld a, [wPlayerGender]
 	and a
 	jr z, .RedBack
+	; Girl - use 48x48 unzoomed sprite
 	ld de, GreenPicBack
 	ld a, BANK(GreenPicBack)
-	jr .GreenSpriteLoaded
+	ASSERT BANK(GreenPicBack) == BANK(OldManPicBack)
+	ASSERT BANK(RedPicBack) == BANK(OldManPicBack)
+	ASSERT BANK(RedPicBack) == BANK(ProfOakPicBack)
+	call UncompressSpriteFromDE
+	call LoadBackSpriteUnzoomed
+	jr .doneLoadingSprite
 .RedBack
 	ld de, RedPicBack
-.next
+.scaleSprite
+	; Boy/Old Man/Prof Oak - use 32x32 scaled sprite
 	ld a, BANK(RedPicBack)
-.GreenSpriteLoaded
-	ASSERT BANK(GreenPicBack) == BANK(OldManPicBack) ; These two ASSERTs make sure to cover
-	ASSERT BANK(RedPicBack) == BANK(OldManPicBack)   ; both sprite cases
+	ASSERT BANK(GreenPicBack) == BANK(OldManPicBack)
+	ASSERT BANK(RedPicBack) == BANK(OldManPicBack)
 	ASSERT BANK(RedPicBack) == BANK(ProfOakPicBack)
 	call UncompressSpriteFromDE
 	predef ScaleSpriteByTwo
+	ld de, vBackPic
+	call InterlaceMergeSpriteBuffers
+.doneLoadingSprite
 	ld hl, wShadowOAM
 	xor a
 	ldh [hOAMTile], a ; initial tile number
@@ -6437,8 +6446,6 @@ LoadPlayerBackPic:
 	ld e, a
 	dec b
 	jr nz, .loop
-	ld de, vBackPic
-	call InterlaceMergeSpriteBuffers
 	ld a, BANK("Sprite Buffers")
 	call OpenSRAM
 	ld hl, vSprites
