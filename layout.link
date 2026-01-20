@@ -162,6 +162,7 @@ ROMX $23
 	"Pikachu Cries 3"
 ROMX $24
 	"Pikachu Cries 4"
+	"NPC Sprites 4"
 ROMX $25
 	"Pikachu Cries 5"
 ROMX $26
@@ -227,6 +228,17 @@ ROMX $3E
 ROMX $3F
 	"Overworld Pikachu"
 	"NPC Sprites 3"
+ROMX $40
+	"Follower Sprites"
+ROMX $41
+	"Follower Sprites 2"
+ROMX $42
+	"Follower Sprites 3"
+ROMX $43
+	"Follower Sprites 4"
+ROMX $44
+	"Follower Sprites 5"
+ROMX $45
 WRAM0
 	"Audio RAM"
 	org $c100
