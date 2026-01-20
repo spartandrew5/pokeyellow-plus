@@ -1831,8 +1831,15 @@ LoadSurfingPlayerSpriteGraphics2::
 	jr LoadPlayerSpriteGraphicsCommon
 
 LoadSurfingPlayerSpriteGraphics::
-	ld b, BANK(SeelSprite)
-	ld de, SeelSprite
+	xor a
+	ld [wd472], a
+	ld b, BANK(RedSurfSprite)
+	ld de, RedSurfSprite
+	ld a, [wPlayerGender]
+	and a
+	jr z, .AreGuy1
+	ld de, GreenSurfSprite
+.AreGuy1
 	jr LoadPlayerSpriteGraphicsCommon
 
 LoadBikePlayerSpriteGraphics::
