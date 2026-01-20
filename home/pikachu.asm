@@ -45,10 +45,8 @@ EnablePikachuFollowingPlayer::
 	ret
 
 CheckPikachuFollowingPlayer::
-	push hl
-	ld hl, wPikachuOverworldStateFlags
-	bit 1, [hl]
-	pop hl
+	; Always return z SET (enabled)
+	xor a ; sets z flag
 	ret
 
 SpawnPikachu::

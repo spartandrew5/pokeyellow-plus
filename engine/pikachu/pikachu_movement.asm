@@ -970,6 +970,24 @@ LoadPikachuSpriteIntoVRAM:
 	call LoadPikachuBallIconIntoVRAM
 	ret
 
+; Version for followers - sprite is already loaded, just copy to animation VRAM location
+LoadFollowerSpriteIntoVRAM::
+	; Copy sprite from normal location to temporary animation location
+	; The follower sprite is already loaded at vNPCSprites + $c * $10
+	; We need to copy it to vNPCSprites2 + $4c * $10 when hPikachuSpriteVRAMOffset is $40
+	ld hl, vNPCSprites2 + $c * $10
+	ldh a, [hPikachuSpriteVRAMOffset]
+	and a
+	jr z, .load
+	ld hl, vNPCSprites2 + $4c * $10
+.load
+	ld de, vNPCSprites + $c * $10
+	lb bc, 0, (SandshrewSprite - PikachuSprite) / 32
+	call CopyVideoDataAlternate
+	call LoadPikachuShadowIntoVRAM
+	call LoadPikachuBallIconIntoVRAM
+	ret
+
 PikachuPewterPokecenterCheck:
 	ld a, [wCurMap]
 	cp PEWTER_POKECENTER

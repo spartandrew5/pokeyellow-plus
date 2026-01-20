@@ -74,6 +74,7 @@ IsSurfingPikachuInParty::
 ; also performs a bankswitch to IsStarterPikachuAliveInOurParty
 	ld a, [wd471]
 	and $3f
+	set 7, a ; Always enable follower if party exists
 	ld [wd471], a
 	ld hl, wPartyMon1
 	ld c, PARTY_LENGTH
@@ -114,10 +115,12 @@ IsSurfingPikachuInParty::
 .checkForStarter
 	push hl
 	push bc
-	callfar IsStarterPikachuAliveInOurParty
+	; Check if player has any Pokemon in party
+	ld a, [wPartyCount]
+	and a
 	pop bc
 	pop hl
-	ret nc
+	ret z ; no party
 	ld a, [wd471]
 	set 7, a
 	ld [wd471], a

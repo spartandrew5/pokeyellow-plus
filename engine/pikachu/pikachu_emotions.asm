@@ -5,6 +5,20 @@ IsPlayerTalkingToPikachu::
 	ldh a, [hSpriteIndex]
 	cp PIKACHU_SPRITE_INDEX
 	ret nz
+	; Check if the first party Pokemon is partner Pikachu/Raichu
+	push af
+	xor a
+	ld [wWhichPokemon], a ; check first party slot
+	callfar IsThisPartyMonStarterPikachu
+	jr c, .isPartnerPikachu
+	; Not partner Pikachu/Raichu - clear state and skip (no interaction)
+	xor a
+	ldh [hSpriteIndex], a
+	ld [wd435], a
+	pop af
+	ret
+.isPartnerPikachu
+	pop af
 	call InitializePikachuTextID
 	xor a
 	ldh [hSpriteIndex], a
@@ -416,7 +430,7 @@ PikachuWalksToNurseJoy:
 	ld a, $40
 	ldh [hPikachuSpriteVRAMOffset], a
 	call LoadPikachuSpriteIntoVRAM
-	call .GetMovementData
+	call GetFollowerMovementDataForNurseJoy
 	and a
 	jr z, .skip
 	call ApplyPikachuMovementData
@@ -425,7 +439,21 @@ PikachuWalksToNurseJoy:
 	ldh [hPikachuSpriteVRAMOffset], a
 	ret
 
-.GetMovementData:
+; Version for any follower - uses already-loaded sprite
+FollowerWalksToNurseJoy::
+	ld a, $40
+	ldh [hPikachuSpriteVRAMOffset], a
+	call LoadFollowerSpriteIntoVRAM
+	call GetFollowerMovementDataForNurseJoy
+	and a
+	jr z, .skip
+	call ApplyPikachuMovementData
+.skip
+	xor a
+	ldh [hPikachuSpriteVRAMOffset], a
+	ret
+
+GetFollowerMovementDataForNurseJoy:
 	ld a, [wSpritePikachuStateData2MapY]
 	ld e, a
 	ld a, [wSpritePikachuStateData2MapX]
