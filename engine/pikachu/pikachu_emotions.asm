@@ -5,6 +5,20 @@ IsPlayerTalkingToPikachu::
 	ldh a, [hSpriteIndex]
 	cp PIKACHU_SPRITE_INDEX
 	ret nz
+	; Check if the first party Pokemon is partner Pikachu/Raichu
+	push af
+	xor a
+	ld [wWhichPokemon], a ; check first party slot
+	callfar IsThisPartyMonStarterPikachu
+	jr c, .isPartnerPikachu
+	; Not partner Pikachu/Raichu - clear state and skip (no interaction)
+	xor a
+	ldh [hSpriteIndex], a
+	ld [wd435], a
+	pop af
+	ret
+.isPartnerPikachu
+	pop af
 	call InitializePikachuTextID
 	xor a
 	ldh [hSpriteIndex], a

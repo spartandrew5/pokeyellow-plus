@@ -81,7 +81,10 @@ IsThisMonStarterPikachu:
 	call AddNTimes
 	ld a, [hl]
 	cp STARTER_PIKACHU
+	jr z, .checkOT
+	cp RAICHU ; also accept Raichu as partner
 	jr nz, .notPlayerPikachu
+.checkOT
 	ld bc, wPartyMon1OTID - wPartyMon1
 	add hl, bc
 	ld a, [wPlayerID]
