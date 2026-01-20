@@ -1,13 +1,15 @@
 ShouldPikachuSpawn::
-; possibly to test if pika should be out?
+; Check if any Pokemon should spawn as follower
 	ld a, [wPikachuOverworldStateFlags]
 	bit 5, a
 	jr nz, .hide
 	ld a, [wPikachuOverworldStateFlags]
 	bit 7, a
 	jr nz, .hide
-	call IsStarterPikachuAliveInOurParty
-	jr nc, .hide
+	; Check if player has any Pokemon in party
+	ld a, [wPartyCount]
+	and a
+	jr z, .hide ; no party at all
 	ld a, [wWalkBikeSurfState]
 	and a
 	jr nz, .hide

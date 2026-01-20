@@ -44,6 +44,7 @@ InitOutsideMapSprites:
 	ld de, wSpriteSet
 	ld bc, wSpriteSetID - wSpriteSet
 	call CopyData ; copy it to wSpriteSet
+	farcall LoadFollowerSpriteBasedOnParty
 	call LoadMapSpriteTilePatterns
 .skipLoadingSpriteSet
 	call LoadMapSpritesImageBaseOffset
@@ -64,6 +65,7 @@ LoadSpriteSetFromMapHeader:
 	call FillMemory
 	ld a, SPRITE_PIKACHU ; load Pikachu separately
 	ld [wSpriteSet], a
+	farcall LoadFollowerSpriteBasedOnParty
 	ld hl, wSprite01StateData1
 	ld a, 14
 .storeVRAMSlotsLoop
