@@ -25,14 +25,16 @@ DisplayPokemonCenterDialogue_::
 	and a
 	jp nz, .declinedHealing ; if the player chose No
 	call SetLastBlackoutMap
-	callfar IsStarterPikachuAliveInOurParty
+	; Check if follower is present
+	call IsAnyPokemonAliveInParty
 	jr nc, .notHealingPlayerPikachu
 	call CheckPikachuFollowingPlayer
 	jr nz, .notHealingPlayerPikachu
 	call LoadCurrentMapView
 	call Delay3
 	call UpdateSprites
-	callfar PikachuWalksToNurseJoy
+	; Use the follower version that keeps the already-loaded sprite
+	callfar FollowerWalksToNurseJoy
 .notHealingPlayerPikachu
 	ld hl, NeedYourPokemonText
 	call PrintText
@@ -41,7 +43,8 @@ DisplayPokemonCenterDialogue_::
 	call CheckPikachuFollowingPlayer
 	jr nz, .playerPikachuNotOnScreen
 	call DisablePikachuOverworldSpriteDrawing
-	callfar IsStarterPikachuAliveInOurParty
+	; Always call animation for any follower
+	call IsAnyPokemonAliveInParty
 	call c, Func_6eaa
 .playerPikachuNotOnScreen
 	lb bc, 1, 8
@@ -60,7 +63,7 @@ DisplayPokemonCenterDialogue_::
 	call PlaySound
 	call CheckPikachuFollowingPlayer
 	jr nz, .doNotReturnPikachu
-	callfar IsStarterPikachuAliveInOurParty
+	call IsAnyPokemonAliveInParty
 	call c, Func_6eaa
 	ld a, $5
 	ld [wPikachuSpawnState], a
@@ -70,7 +73,7 @@ DisplayPokemonCenterDialogue_::
 	call Func_6ebb
 	ld hl, PokemonFightingFitText
 	call PrintText
-	callfar IsStarterPikachuAliveInOurParty
+	call IsAnyPokemonAliveInParty
 	jr nc, .notInParty
 	lb bc, 15, 0
 	call Func_6ebb
@@ -147,3 +150,18 @@ PokemonCenterFarewellText:
 LooksContentText:
 	text_far _LooksContentText
 	text_end
+
+IsAnyPokemonAliveInParty::
+; Check if first party Pokemon is alive (HP > 0)
+; Returns: carry set if alive, clear if fainted or no party
+	ld hl, wPartyCount
+	ld a, [hl]
+	and a
+	ret z ; no party members, return nc
+	; Check if first party member has HP
+	ld hl, wPartyMon1HP
+	ld a, [hli]
+	or [hl] ; check both bytes of HP
+	ret z ; HP is 0, return nc
+	scf ; HP > 0, set carry
+	ret

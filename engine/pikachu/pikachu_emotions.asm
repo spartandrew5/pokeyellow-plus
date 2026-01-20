@@ -416,7 +416,7 @@ PikachuWalksToNurseJoy:
 	ld a, $40
 	ldh [hPikachuSpriteVRAMOffset], a
 	call LoadPikachuSpriteIntoVRAM
-	call .GetMovementData
+	call GetFollowerMovementDataForNurseJoy
 	and a
 	jr z, .skip
 	call ApplyPikachuMovementData
@@ -425,7 +425,21 @@ PikachuWalksToNurseJoy:
 	ldh [hPikachuSpriteVRAMOffset], a
 	ret
 
-.GetMovementData:
+; Version for any follower - uses already-loaded sprite
+FollowerWalksToNurseJoy::
+	ld a, $40
+	ldh [hPikachuSpriteVRAMOffset], a
+	call LoadFollowerSpriteIntoVRAM
+	call GetFollowerMovementDataForNurseJoy
+	and a
+	jr z, .skip
+	call ApplyPikachuMovementData
+.skip
+	xor a
+	ldh [hPikachuSpriteVRAMOffset], a
+	ret
+
+GetFollowerMovementDataForNurseJoy:
 	ld a, [wSpritePikachuStateData2MapY]
 	ld e, a
 	ld a, [wSpritePikachuStateData2MapX]
