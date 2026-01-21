@@ -58,59 +58,55 @@ OptionMenuJumpTable:
 DEF NUM_TEXT_SPEED_OPTS EQU const_value ; 3
 
 OptionsMenu_TextSpeed:
-	call GetTextSpeed
-	ldh a, [hJoy5]
+	call GetTextSpeed ; c = 0 (instant), 1 (fast), 2 (medium), 3 (slow),
+	ldh a, [hJoy5]    ; d = left speed, e = right speed
 	bit B_PAD_RIGHT, a
 	jr nz, .pressedRight
 	bit B_PAD_LEFT, a
 	jr nz, .pressedLeft
 	jr .nonePressed
-
-.pressedRight
-	ld a, c
-	cp NUM_TEXT_SPEED_OPTS - 1
-	jr c, .increase
-	ld c, -1
-.increase
+.pressedRight ; pick right speed e and increase c
 	inc c
-	ld a, e
-	jr .save
-
-.pressedLeft
 	ld a, c
-	and a
-	jr nz, .decrease
-	ld c, NUM_TEXT_SPEED_OPTS
-.decrease
+	cp 4
+	jr nz, .save
+	ld c, 0   ; wrap around to 0 if c = 4
+	jr .save
+.pressedLeft  ; pick left speed d and decrease c
+	ld e, d
 	dec c
-	ld a, d
+	ld a, c
+	cp -1 ; inc a
+	jr nz, .save
+
 
 .save
-	ld b, a
 	ld a, [wOptions]
 	and ~TEXT_DELAY_MASK
-	or b
+	or e
 	ld [wOptions], a
 
 .nonePressed
 	ld b, 0
+	sla c
 	ld hl, .Strings
 	add hl, bc
-	add hl, bc
-	ld e, [hl]
-	inc hl
+	ld a, [hli]
+	ld e, a
 	ld d, [hl]
 	hlcoord 14, 2
 	call PlaceString
-	and a ; clear carry flag
+	and a
 	ret
 
 .Strings:
 ; entries correspond to OPT_TEXT_SPEED_* constants
+	dw .Instant
 	dw .Fast
 	dw .Mid
 	dw .Slow
 
+.Instant: db "INST@"
 .Fast: db "FAST@"
 .Mid:  db "MID @"
 .Slow: db "SLOW@"
@@ -119,24 +115,29 @@ OptionsMenu_TextSpeed:
 ; Loads the text delay value of the options
 ; to the left in d and to the right in e
 GetTextSpeed:
-	ld a, [wOptions]
+ld a, [wOptions]
 	and TEXT_DELAY_MASK
-	cp TEXT_DELAY_SLOW
-	jr z, .slowTextOption
+	ld c, 0
+	cp TEXT_DELAY_INSTANT
+	jr z, .instantTextOption
+	inc c
 	cp TEXT_DELAY_FAST
 	jr z, .fastTextOption
-	ld c, OPT_TEXT_SPEED_MID
+	inc c
+	cp TEXT_DELAY_MEDIUM
+	jr z, .mediumTextOption
+; slow text option
+	inc c
+	lb de, TEXT_DELAY_MEDIUM, TEXT_DELAY_INSTANT
+	ret
+.mediumTextOption
 	lb de, TEXT_DELAY_FAST, TEXT_DELAY_SLOW
 	ret
-
-.slowTextOption
-	ld c, OPT_TEXT_SPEED_SLOW
-	lb de, TEXT_DELAY_MEDIUM, TEXT_DELAY_FAST
-	ret
-
 .fastTextOption
-	ld c, OPT_TEXT_SPEED_FAST
-	lb de, TEXT_DELAY_SLOW, TEXT_DELAY_MEDIUM
+	lb de, TEXT_DELAY_INSTANT, TEXT_DELAY_MEDIUM
+	ret
+.instantTextOption
+	lb de, TEXT_DELAY_SLOW, TEXT_DELAY_FAST
 	ret
 
 OptionsMenu_BattleAnimations:
