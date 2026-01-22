@@ -6389,23 +6389,33 @@ LoadPlayerBackPic:
 	cp BATTLE_TYPE_PIKACHU ; is it the pikachu battle at the beginning of the game?
 	jr z, .scaleSprite
 	ld a, [wPlayerGender]
-	and a
-	jr z, .RedBack
+	cp 1 ; check if girl
+	jr z, .GirlBack
+	cp 2 ; check if Yellow
+	jr z, .YellowBack
+	; Boy - use 32x32 scaled sprite
+	ld de, RedPicBack
+	jr .scaleSprite
+.GirlBack
 	; Girl - use 48x48 unzoomed sprite
 	ld de, GreenPicBack
 	ld a, BANK(GreenPicBack)
 	ASSERT BANK(GreenPicBack) == BANK(OldManPicBack)
+	ASSERT BANK(GreenPicBack) == BANK(YellowPicBack)
 	ASSERT BANK(RedPicBack) == BANK(OldManPicBack)
 	ASSERT BANK(RedPicBack) == BANK(ProfOakPicBack)
 	call UncompressSpriteFromDE
 	call LoadBackSpriteUnzoomed
 	jr .doneLoadingSprite
-.RedBack
-	ld de, RedPicBack
+.YellowBack
+	; Yellow - use 32x32 scaled sprite (same as Red)
+	ld de, YellowPicBack
 .scaleSprite
-	; Boy/Old Man/Prof Oak - use 32x32 scaled sprite
+	; Boy/Yellow/Old Man/Prof Oak - use 32x32 scaled sprite
 	ld a, BANK(RedPicBack)
 	ASSERT BANK(GreenPicBack) == BANK(OldManPicBack)
+	ASSERT BANK(GreenPicBack) == BANK(YellowPicBack)
+	ASSERT BANK(YellowPicBack) == BANK(OldManPicBack)
 	ASSERT BANK(RedPicBack) == BANK(OldManPicBack)
 	ASSERT BANK(RedPicBack) == BANK(ProfOakPicBack)
 	call UncompressSpriteFromDE

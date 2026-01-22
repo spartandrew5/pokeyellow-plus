@@ -1794,9 +1794,14 @@ LoadWalkingPlayerSpriteGraphics::
 	ld b, BANK(RedSprite)
 	ld de, RedSprite
 	ld a, [wPlayerGender]
+	cp 2
+	jr z, .AreYellow1
 	and a
 	jr z, .AreGuy1
 	ld de, GreenSprite
+	jr .AreGuy1
+.AreYellow1
+	ld de, YellowSprite
 .AreGuy1
 	jr LoadPlayerSpriteGraphicsCommon
 
@@ -1807,9 +1812,14 @@ LoadRunningPlayerSpriteGraphics::
 	ld b, BANK(RedRunSprite)
 	ld de, RedRunSprite
 	ld a, [wPlayerGender]
+	cp 2
+	jr z, .AreYellow1
 	and a
 	jr z, .AreGuy1
 	ld de, GreenRunSprite
+	jr .AreGuy1
+.AreYellow1
+	ld de, YellowRunSprite
 .AreGuy1
 	jr LoadPlayerSpriteGraphicsCommon
 
@@ -1836,9 +1846,14 @@ LoadSurfingPlayerSpriteGraphics::
 	ld b, BANK(RedSurfSprite)
 	ld de, RedSurfSprite
 	ld a, [wPlayerGender]
+	cp 2
+	jr z, .AreYellow1
 	and a
 	jr z, .AreGuy1
 	ld de, GreenSurfSprite
+	jr .AreGuy1
+.AreYellow1
+	ld de, YellowSurfSprite
 .AreGuy1
 	jr LoadPlayerSpriteGraphicsCommon
 
@@ -1846,9 +1861,14 @@ LoadBikePlayerSpriteGraphics::
 	ld b, BANK(RedBikeSprite)
 	ld de, RedBikeSprite
 	ld a, [wPlayerGender]
+	cp 2
+	jr z, .AreYellow
 	and a
 	jr z, LoadPlayerSpriteGraphicsCommon
 	ld de, GreenBikeSprite
+	jr LoadPlayerSpriteGraphicsCommon
+.AreYellow
+	ld de, YellowBikeSprite
 
 LoadPlayerSpriteGraphicsCommon::
 	ld hl, vNPCSprites
