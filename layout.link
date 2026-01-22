@@ -50,7 +50,6 @@ ROMX $4
 ROMX $5
 	"bank5"
 	"NPC Sprites 2"
-	"Battle Engine 2"
 ROMX $6
 	"Maps 1"
 	"Maps 2"
@@ -210,7 +209,8 @@ ROMX $39
 	"Pikachu Graphics 1"
 ROMX $3A
 	"bank3A"
-; bank $3B is empty
+ROMX $3B
+	"Battle Engine 2"
 ROMX $3C
 	"Pikachu PCM"
 	"Tilesets 4"
