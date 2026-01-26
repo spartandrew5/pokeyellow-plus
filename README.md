@@ -30,7 +30,7 @@ There are several branches, each with different features:
 **master** branch:
 * Combination of above branches
 
-<img src="https://i.imgur.com/TPF9qx1.gif" width="50%" />
+![Following Pokemon](https://i.imgur.com/TPF9qx1.gif)
 
 
 ## Planned Features
