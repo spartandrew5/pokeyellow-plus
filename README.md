@@ -38,6 +38,7 @@ There are several branches, each with different features:
 * Add ability to get all 151 mons and maybe a custom Mew event.
 * EXP bar.
 * Interaction with non-Pikachu mons. 
+* Update Party menu icons
 
 ## Known Bugs
 * Some NPC Overworld Pokemon do not face movement/player interaction direction. Not sure why but will try to fix in future updates.
