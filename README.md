@@ -31,6 +31,7 @@ There are several branches, each with different features:
 * Combination of above branches
 
 ![Following Pokemon](https://i.imgur.com/TPF9qx1.gif)
+![FuchsiaCity](https://github.com/user-attachments/assets/af44cc6f-0e12-4bc5-a3da-757271edf7a8)
 
 
 ## Planned Features
