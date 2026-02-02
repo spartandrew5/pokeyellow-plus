@@ -809,20 +809,21 @@ ItemUseEvoStone:
 	ld [wCurPartySpecies], a
 	call Func_d85d
 	jr nc, .noEffect
-	callfar IsThisPartyMonStarterPikachu
-	jr nc, .notPlayerPikachu
-	ldpikacry e, PikachuCry28
-	callfar PlayPikachuSoundClip
-	ld a, [wWhichPokemon]
-	ld hl, wPartyMonNicks
-	call GetPartyMonName
-	ld hl, RefusingText
-	call PrintText
-	ld a, $4
-	ld [wd49b], a
-	ld a, $82
-	ld [wPikachuMood], a
-	jr .canceledItemUse
+	; Removed starter Pikachu evolution check - partner Pikachu can now evolve
+	;callfar IsThisPartyMonStarterPikachu
+	;jr nc, .notPlayerPikachu
+	;ldpikacry e, PikachuCry28
+	;callfar PlayPikachuSoundClip
+	;ld a, [wWhichPokemon]
+	;ld hl, wPartyMonNicks
+	;call GetPartyMonName
+	;ld hl, RefusingText
+	;call PrintText
+	;ld a, $4
+	;ld [wd49b], a
+	;ld a, $82
+	;ld [wPikachuMood], a
+	;jr .canceledItemUse
 
 .notPlayerPikachu
 	ld a, SFX_HEAL_AILMENT
